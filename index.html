@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Demo for paper: Adversarial Robustness of Mel based speaker recognition systems</title>
+</head>
+<body>
+<h1 id="Demo for paper" style="font-size:50px"><center> Adversarial Robustness of Mel based speaker recognition systems </center></h1>
+<h2 id="abstract">Abstract:</h2>
+<div style="text-align: justify;font-size: 20px">Convolutional neural networks (CNN) applied to Mel spec-trograms began to dominate the landscape of speaker recognition systems. Correspondingly, it is also important to evaluate their robustness to adversarial attacks that remains unexplored for  end-to-end  trained  CNNs  for  speaker  recognition. Our work addresses this gap and investigates variations of the iterative Fast Gradient Sign Method (FGSM) to generate adversarial attacks.  We observe that a vanilla iterative FGSM can flip the identity of each speaker sample to every other speaker in the LibriSpeech dataset.  Surprisingly, the effort required to flip the identity is uncorrelated with the distance between the original and target speaker embeddings. Furthermore, we propose adversarial attacks specific to Mel spectrogram features by (a) limiting the number of pixels attacked, (b) restricting changes to specific frequency bands,  and (c) restricting changes to particular time duration.  Using thorough qualitative and quantitative results, we demonstrate the fragility and non-intuitive nature of the current CNN-based speaker recognition systems, where the predicted speaker identities can be flipped without any perceptible changes in the audio.</div>
+</div>
+<p><br /></p>
+<h4 style="font-size:20px">1. Adversarial attack on speaker recognition system </h4>
+<center><p><img src="vgg.jpg" alt="arch" /></p> </center>
+<h4 style="font-size:20px">2. Demo of Vanilla FGSM, top-k and top-2k attacks: </h4>
+<blockquote>
+<table border=1>
+<div style="text-align: justify;font-size: 20px">A sample of particular speaker is attacked to the given target speaker with different attacks.</div>
+<tr>
+<td align="center"><span>Original audio</span></td>
+<td align="center"><span>Target speaker</span></td>
+<td align="center"><span>Vanilla FGSM</span></td>
+<td align="center"><span>Top-k<span></td>
+<td align="center"><span>Top-2k<span></td>
+</tr>
+<tr>
+<td><audio controls><source src="demo/fgsm/in_7460_92002_000047_000003.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/fgsm/in_7995_280250_000047_000001.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/fgsm/vfgsm_7460_7995.wav"></audio></td>
+<td><audio controls><source src="demo/fgsm/topk_7460_7995.wav"></audio></td>
+<td><audio controls><source src="demo/fgsm/top2k_7460_7995.wav"></audio></td>
+
+</tr>
+<tr>
+<td><audio controls><source src="demo/fgsm/in_7460_92002_000047_000003.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/fgsm/in_5635_53458_000052_000001.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/fgsm/vfgsm_7460_5635.wav"></audio></td>
+<td><audio controls><source src="demo/fgsm/topk_7460_5635.wav"></audio></td>
+<td><audio controls><source src="demo/fgsm/top2k_7460_5635.wav"></audio></td>
+
+</tr>
+<tr>
+<td><audio controls><source src="demo/fgsm/in_192_128345_000093_000001.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/fgsm/in_1212_14653_000036_000000.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/fgsm/fgsm_192_1212.wav"></audio></td>
+<td><audio controls><source src="demo/fgsm/topk_192_1212.wav"></audio></td>
+<td><audio controls><source src="demo/fgsm/top2k_192_1212.wav"></audio></td>
+
+</tr>
+<tr>
+<td><audio controls><source src="demo/fgsm/in_192_128345_000093_000001.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/fgsm/in_70_121130_000007_000000.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/fgsm/vfgsm_192_70.wav"></audio></td>
+<td><audio controls><source src="demo/fgsm/topk_192_70.wav"></audio></td>
+<td><audio controls><source src="demo/fgsm/top2k_192_70.wav"></audio></td>                                               
+</tr>
+</table>
+<br/>
+</blockquote>
+<h4 style="font-size:20px">3. Demo of attacking different time bands. </h4>
+<blockquote>
+<table border=1>
+<div style="text-align: justify;font-size: 20px"> A sample of a speaker is attacked only the particular time frames to the given target speaker.  </div>
+<tr>
+<td align="center"><span>Position</span></td>
+<td align="center"><span>Original audio</span></td>
+<td align="center"><span>Target speaker<span></td>
+<td align="center"><span>t=2</span></td>
+<td align="center"><span>t=30<span></td>
+</tr>
+<tr>
+<td>Start</td>
+<td><audio controls><source src="demo/time/in_7460_92002_000047_000003.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/time/in_192_128345_000093_000001.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/time/F7460_192_2.wav"></audio></td>
+<td><audio controls><source src="demo/time/F7460_192_30.wav"></audio></td>
+</tr>
+<tr>
+<td>Start</td>
+<td><audio controls><source src="demo/time/in_192_128345_000093_000001.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/time/in_7460_92002_000047_000003.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/time/F192_7460_2.wav"></audio></td>
+<td><audio controls><source src="demo/time/F192_7460_30.wav"></audio></td>
+</tr>
+<tr>
+<td>Middle</td>
+<td><audio controls><source src="demo/time/in_7460_92002_000047_000003.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/time/in_192_128345_000093_000001.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/time/M7460_192_2.wav"></audio></td>
+<td><audio controls><source src="demo/time/M7460_192_30.wav"></audio></td>
+</tr>
+<tr>
+<td>Middle</td>
+<td><audio controls><source src="demo/time/in_192_128345_000093_000001.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/time/in_7460_92002_000047_000003.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/time/M192_7460_2.wav"></audio></td>
+<td><audio controls><source src="demo/time/M192_7460_30.wav"></audio></td>
+</tr>
+<tr>
+<td>End</td>
+<td><audio controls><source src="demo/time/in_7460_92002_000047_000003.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/time/in_192_128345_000093_000001.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/time/E7460_192_2.wav"></audio></td>
+<td><audio controls><source src="demo/time/E7460_192_30.wav"></audio></td>
+</tr>
+<tr>
+<td>End</td>
+<td><audio controls><source src="demo/time/in_192_128345_000093_000001.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/time/in_7460_92002_000047_000003.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/time/E192_7460_2.wav"></audio></td>
+<td><audio controls><source src="demo/time/E192_7460_30.wav"></audio></td>
+</table>
+<br/>
+</blockquote>
+<h4 style="font-size:20px">4. Demo of attacking frequency band: </h4>
+<blockquote>
+<table border=1>
+<div style="text-align: justify;font-size: 20px">A sample of particular speaker is attacked only on certain frequency bands to the given target speaker.</div>
+<tr>
+<td align="center"><span>Original audio</span></td>
+<td align="center"><span>Target speaker</span></td>
+<td align="center"><span>Attacked</span></td>
+</tr>
+<tr>
+<td><audio controls><source src="demo/freq/in_7460_92002_000047_000003.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/freq/in_5635_53458_000052_000001.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/freq/7460_5635.wav"></audio></td>
+
+</tr>
+<tr>
+<td><audio controls><source src="demo/freq/in_7995_280250_000047_000001.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/freq/in_70_121130_000007_000000.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/freq/7995_70.wav"></audio></td>
+
+</tr>
+<tr>
+<td><audio controls><source src="demo/freq/in_5635_53458_000052_000001.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/freq/in_192_128345_000093_000001.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/freq/5635_192.wav"></audio></td>
+</tr>
+<tr>
+<td><audio controls><source src="demo/freq/in_70_121130_000007_000000.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/freq/in_2499_156153_000007_000003.npy_ref.wav"></audio></td>
+<td><audio controls><source src="demo/freq/70_2499.wav"></audio></td>                                        
+</tr>
+</table>
+<br/>
+</blockquote>
+
+
+

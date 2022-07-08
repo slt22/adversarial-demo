@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Adversarial Robustness of Mel based speaker recognition systems</title>
+</head>
+<body>
+<h2 align="center">
+<div><b>Abstract:</b>Convolutional neural networks (CNN) applied to Mel spec-trograms began to dominate the landscape of speaker recogni-tion systems. Correspondingly, it is also important to evaluatetheir robustness to adversarial attacks that remains unexploredfor  end-to-end  trained  CNNs  for  speaker  recognition.   Ourwork addresses this gap and investigates variations of the iter-ative Fast Gradient Sign Method (FGSM) to generate adver-sarial attacks.  We observe that a vanilla iterative FGSM canflip the identity of each speaker sample to every other speakerin the LibriSpeech dataset.  Surprisingly, the effort requiredto flip the identity is uncorrelated with the distance betweenthe original and target speaker embeddings. Furthermore, wepropose adversarial attacks specific to Mel spectrogram fea-tures by (a) limiting the number of pixels attacked, (b) restrict-ing changes to specific frequency bands,  and (c) restrictingchanges to particular time duration.  Using thorough qualita-tive and quantitative results, we demonstrate the fragility andnon-intuitive nature of the current CNN-based speaker recog-nition systems, where the predicted speaker identities can beflipped without any perceptible changes in the audio.
+</div>
+<h4>1. Examples clean audio, noisy audio and de-noised audio: </h4>
+<blockquote>
+<table border=1>
+<tr>
+<td align="center"><span>speaker</span></td>
+<td align="center"><span>clean audio(C)</span></td>
+<td align="center"><span>noisy audio(N)<span></td>
+<td align="center"><span>denoised audio(D)<span></td>
+</tr>
+<tr>
+<td>001</td>
+<td><audio controls><source src="samples/original/001_137.wav"></audio></td>
+<td><audio controls><source src="samples/original/001n_137.wav"></audio></td>
+<td><audio controls><source src="samples/original/001d_137.wav"></audio></td>
+</tr>
+<tr>
+<td>045</td>
+<td><audio controls><source src="samples/original/045_431.wav"></audio></td>
+<td><audio controls><source src="samples/original/045n_431.wav"></audio></td>
+<td><audio controls><source src="samples/original/045d_431.wav"></audio></td>
+</tr>
+<tr>
+<td>012</td>
+<td><audio controls><source src="samples/original/012_137.wav"></audio></td>
+<td><audio controls><source src="samples/original/012n_137.wav"></audio></td>
+<td><audio controls><source src="samples/original/012d_137.wav"></audio></td>
+</tr>
+<tr>
+<td>093</td>
+<td><audio controls><source src="samples/original/093_431.wav"></audio></td>
+<td><audio controls><source src="samples/original/093n_431.wav"></audio></td>
+<td><audio controls><source src="samples/original/001d_137.wav"></audio></td>
+</tr>
+</table>
+<br/>
+</blockquote>
+<h4>2. The results of speaker adaptaion: </h4>
+<blockquote>
+<table border=1>
+<tr>
+<td rowspan="2" align="center"><span>Test set</span></td>
+<td rowspan="2" align="center"><span>Original audio<span></td>
+<td colspan="2" align="center"><span>Synthesized speech<span></td>
+</tr>
+<tr>
+<td align="center"><span>Baseline model<span></td>
+<td align="center"><span>Proposed model<span></td>
+</tr>
+<tr>
+<td>001-C</td>
+<td><audio controls><source src="samples/original/001_137.wav"></audio></td>
+<td><audio controls><source src="samples/sa/001-C-B/2.mel.wav"></audio></td>
+<td><audio controls><source src="samples/sa/001-C-P/2.mel.wav"></audio></td>
+</tr>
+<tr>
+<td><font color=red>001-N</font></td>
+<td><audio controls><source src="samples/original/001n_137.wav"></audio></td>
+<td align="center">None</td>
+<td><audio controls><source src="samples/sa/001-N-P/2.mel.wav"></audio></td>
+</tr>
+<tr>
+<td>001-D</td>
+<td><audio controls><source src="samples/original/001d_137.wav"></audio></td>
+<td><audio controls><source src="samples/sa/001-D-B/2.mel.wav"></audio></td>
+<td align="center">*</td>
+</tr>
+<tr>
+<td>045-C</td>
+<td><audio controls><source src="samples/original/045_431.wav"></audio></td>
+<td><audio controls><source src="samples/sa/045-C-B/2.mel.wav"></audio></td>
+<td><audio controls><source src="samples/sa/045-C-P/2.mel.wav"></audio></td>
+</tr>
+<tr>
+<td><font color=red>045-N</font></td>
+<td><audio controls><source src="samples/original/045n_431.wav"></audio></td>
+<td align="center">None</td>
+<td><audio controls><source src="samples/sa/045-N-P/2.mel.wav"></audio></td>
+</tr>
+<tr>
+<td>045-D</td>
+<td><audio controls><source src="samples/original/045d_431.wav"></audio></td>
+<td><audio controls><source src="samples/sa/045-D-B/2.mel.wav"></audio></td>
+<td align="center">*</td>
+</tr>
+<tr>
+<td>012-C</td>
+<td><audio controls><source src="samples/original/012_137.wav"></audio></td>
+<td><audio controls><source src="samples/sa/012-C-B/2.mel.wav"></audio></td>
+<td><audio controls><source src="samples/sa/012-C-P/2.mel.wav"></audio></td>
+</tr>
+<tr>
+<td><font color=red>012-N</font></td>
+<td><audio controls><source src="samples/original/012n_137.wav"></audio></td>
+<td align="center">None</td>
+<td><audio controls><source src="samples/sa/012-N-P/2.mel.wav"></audio></td>
+</tr>
+<tr>
+<td>012-D</td>
+<td><audio controls><source src="samples/original/012d_137.wav"></audio></td>
+<td><audio controls><source src="samples/sa/012-D-B/2.mel.wav"></audio></td>
+<td align="center">*</td>
+</tr>
+<tr>
+<td>093-C</td>
+<td><audio controls><source src="samples/original/093_431.wav"></audio></td>
+<td><audio controls><source src="samples/sa/093-C-B/2.mel.wav"></audio></td>
+<td><audio controls><source src="samples/sa/093-C-P/2.mel.wav"></audio></td>
+</tr>
+<tr>
+<td><font color=red>093-N</font></td>
+<td><audio controls><source src="samples/original/093n_431.wav"></audio></td>
+<td align="center">None</td>
+<td><audio controls><source src="samples/sa/093-N-P/2.mel.wav"></audio></td>
+</tr>
+<tr>
+<td>093-D</td>
+<td><audio controls><source src="samples/original/093d_431.wav"></audio></td>
+<td><audio controls><source src="samples/sa/093-D-B/2.mel.wav"></audio></td>
+<td align="center">*</td>
+</tr>
+</table>
+<br/>
+</blockquote>
+<h4>2. The results of speaker encoding: </h4>
+<blockquote>
+<table border=1>
+<tr>
+<td rowspan="2" align="center"><span>Test set</span></td>
+<td rowspan="2" align="center"><span>Original audio<span></td>
+<td colspan="2" align="center"><span>Synthesized speech<span></td>
+</tr>
+<tr>
+<td align="center"><span>Baseline model<span></td>
+<td align="center"><span>Proposed model<span></td>
+</tr>
+<tr>
+<td>001-C</td>
+<td><audio controls><source src="samples/original/001_137.wav"></audio></td>
+<td><audio controls><source src="samples/se/001-C-B/2.mel.wav"></audio></td>
+<td><audio controls><source src="samples/se/001-C-P/2.mel.wav"></audio></td>
+</tr>
+<tr>
+<td><font color=red>001-N</font></td>
+<td><audio controls><source src="samples/original/001n_137.wav"></audio></td>
+<td align="center">None</td>
+<td><audio controls><source src="samples/se/001-N-P/2.mel.wav"></audio></td>
+</tr>
+<tr>
+<td>001-D</td>
+<td><audio controls><source src="samples/original/001d_137.wav"></audio></td>
+<td><audio controls><source src="samples/se/001-D-B/2.mel.wav"></audio></td>
+<td align="center">*</td>
+</tr>
+<tr>
+<td>045-C</td>
+<td><audio controls><source src="samples/original/045_431.wav"></audio></td>
+<td><audio controls><source src="samples/se/045-C-B/2.mel.wav"></audio></td>
+<td><audio controls><source src="samples/se/045-C-P/2.mel.wav"></audio></td>
+</tr>
+<tr>
+<td><font color=red>045-N</font></td>
+<td><audio controls><source src="samples/original/045n_431.wav"></audio></td>
+<td align="center">None</td>
+<td><audio controls><source src="samples/se/045-N-P/2.mel.wav"></audio></td>
+</tr>
+<tr>
+<td>045-D</td>
+<td><audio controls><source src="samples/original/045d_431.wav"></audio></td>
+<td><audio controls><source src="samples/se/045-D-B/2.mel.wav"></audio></td>
+<td align="center">*</td>
+</tr>
+<tr>
+<td>012-C</td>
+<td><audio controls><source src="samples/original/012_137.wav"></audio></td>
+<td><audio controls><source src="samples/se/012-C-B/2.mel.wav"></audio></td>
+<td><audio controls><source src="samples/se/012-C-P/2.mel.wav"></audio></td>
+</tr>
+<tr>
+<td><font color=red>012-N</font></td>
+<td><audio controls><source src="samples/original/012n_137.wav"></audio></td>
+<td align="center">None</td>
+<td><audio controls><source src="samples/se/012-N-P/2.mel.wav"></audio></td>
+</tr>
+<tr>
+<td>012-D</td>
+<td><audio controls><source src="samples/original/012d_137.wav"></audio></td>
+<td><audio controls><source src="samples/se/012-D-B/2.mel.wav"></audio></td>
+<td align="center">*</td>
+</tr>
+<tr>
+<td>093-C</td>
+<td><audio controls><source src="samples/original/093_431.wav"></audio></td>
+<td><audio controls><source src="samples/se/093-C-B/2.mel.wav"></audio></td>
+<td><audio controls><source src="samples/se/093-C-P/2.mel.wav"></audio></td>
+</tr>
+<tr>
+<td><font color=red>093-N</font></td>
+<td><audio controls><source src="samples/original/093n_431.wav"></audio></td>
+<td align="center">None</td>
+<td><audio controls><source src="samples/se/093-N-P/2.mel.wav"></audio></td>
+</tr>
+<tr>
+<td>093-D</td>
+<td><audio controls><source src="samples/original/093d_431.wav"></audio></td>
+<td><audio controls><source src="samples/se/093-D-B/2.mel.wav"></audio></td>
+<td align="center">*</td>
+</tr>
+</table>
+<br/>
+</blockquote>
